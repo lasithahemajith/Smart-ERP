@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/UserController';
 import { authenticate, authorize } from '../middlewares/auth';
+import { apiRateLimiter } from '../middlewares/rateLimiter';
 
 export function createUserRouter(controller: UserController): Router {
   const router = Router();
 
+  router.use(apiRateLimiter);
   router.use(authenticate);
 
   router.get('/stats', authorize('ADMIN'), controller.getStats);

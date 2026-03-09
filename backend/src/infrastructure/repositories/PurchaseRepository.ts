@@ -11,8 +11,6 @@ import {
   PurchaseOrderStatus,
 } from '../../core/entities/Purchase';
 
-let poCounter = 1;
-
 export class PurchaseRepository implements IPurchaseRepository {
   constructor(private prisma: PrismaClient) {}
 
@@ -66,7 +64,8 @@ export class PurchaseRepository implements IPurchaseRepository {
 
   async createPO(data: CreatePurchaseOrderDto): Promise<PurchaseOrderEntity & { items: PurchaseOrderItemEntity[] }> {
     const count = await this.prisma.purchaseOrder.count();
-    const poNumber = `PO-${String(count + poCounter++).padStart(6, '0')}`;
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const poNumber = `PO-${String(count + 1).padStart(5, '0')}-${timestamp}`;
     const totalAmount = data.items.reduce((sum, i) => sum + i.quantity * i.unitCost, 0);
 
     const po = await this.prisma.purchaseOrder.create({
@@ -105,7 +104,7 @@ export class PurchaseRepository implements IPurchaseRepository {
     return this.toPOEntity(po);
   }
 
-  async receivePO(id: string, _receivedById: string, warehouseId: string): Promise<PurchaseOrderEntity> {
+  async receivePO(id: string, warehouseId: string): Promise<PurchaseOrderEntity> {
     const po = await this.prisma.purchaseOrder.findUnique({ where: { id }, include: { items: true } });
     if (!po) throw new Error('Purchase Order not found');
 

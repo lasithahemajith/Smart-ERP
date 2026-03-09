@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { PurchaseController } from '../controllers/PurchaseController';
 import { authenticate, authorize } from '../middlewares/auth';
+import { apiRateLimiter } from '../middlewares/rateLimiter';
 
 export function createPurchaseRouter(controller: PurchaseController): Router {
   const router = Router();
 
+  router.use(apiRateLimiter);
   router.use(authenticate);
 
   // Suppliers

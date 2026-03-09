@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { OrderController } from '../controllers/OrderController';
 import { authenticate, authorize } from '../middlewares/auth';
+import { apiRateLimiter } from '../middlewares/rateLimiter';
 
 export function createOrderRouter(controller: OrderController): Router {
   const router = Router();
 
+  router.use(apiRateLimiter);
   router.use(authenticate);
 
   // Customers

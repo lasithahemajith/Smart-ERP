@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { InventoryController } from '../controllers/InventoryController';
 import { authenticate, authorize } from '../middlewares/auth';
+import { apiRateLimiter } from '../middlewares/rateLimiter';
 
 export function createInventoryRouter(controller: InventoryController): Router {
   const router = Router();
 
+  router.use(apiRateLimiter);
   router.use(authenticate);
 
   // Categories

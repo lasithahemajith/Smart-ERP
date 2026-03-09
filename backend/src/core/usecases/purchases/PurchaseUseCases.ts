@@ -69,7 +69,7 @@ export class PurchaseUseCases {
     return this.purchaseRepo.updatePOStatus(poId, 'CANCELLED');
   }
 
-  async receivePO(poId: string, receivedById: string, warehouseId: string): Promise<PurchaseOrderEntity> {
+  async receivePO(poId: string, warehouseId: string): Promise<PurchaseOrderEntity> {
     const po = await this.purchaseRepo.findPOById(poId);
     if (!po) throw new AppError('Purchase Order not found', 404);
     if (po.status !== 'APPROVED') throw new AppError('PO must be APPROVED before receiving', 400);
@@ -77,6 +77,6 @@ export class PurchaseUseCases {
     const warehouse = await this.inventoryRepo.findWarehouseById(warehouseId);
     if (!warehouse) throw new AppError('Warehouse not found', 404);
 
-    return this.purchaseRepo.receivePO(poId, receivedById, warehouseId);
+    return this.purchaseRepo.receivePO(poId, warehouseId);
   }
 }

@@ -110,7 +110,7 @@ export class PurchaseController {
 
   receivePO = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const po = await this.purchaseUseCases.receivePO(String(req.params.id), req.user!.sub, req.body.warehouseId);
+      const po = await this.purchaseUseCases.receivePO(String(req.params.id), req.body.warehouseId);
       res.json({ success: true, data: po });
     } catch (err) {
       next(err);

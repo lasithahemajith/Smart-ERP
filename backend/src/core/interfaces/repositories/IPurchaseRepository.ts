@@ -35,5 +35,5 @@ export interface IPurchaseRepository {
   findAllPOs(filter?: { status?: PurchaseOrderStatus; supplierId?: string }): Promise<PurchaseOrderEntity[]>;
   createPO(data: CreatePurchaseOrderDto): Promise<PurchaseOrderEntity & { items: PurchaseOrderItemEntity[] }>;
   updatePOStatus(id: string, status: PurchaseOrderStatus, approvedById?: string, receivedDate?: Date): Promise<PurchaseOrderEntity>;
-  receivePO(id: string, receivedById: string, warehouseId: string): Promise<PurchaseOrderEntity>;
+  receivePO(id: string, warehouseId: string): Promise<PurchaseOrderEntity>;
 }

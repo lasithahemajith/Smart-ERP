@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { FinanceController } from '../controllers/FinanceController';
 import { authenticate, authorize } from '../middlewares/auth';
+import { apiRateLimiter } from '../middlewares/rateLimiter';
 
 export function createFinanceRouter(controller: FinanceController): Router {
   const router = Router();
 
+  router.use(apiRateLimiter);
   router.use(authenticate);
 
   // Expenses

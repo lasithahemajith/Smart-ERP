@@ -13,9 +13,6 @@ import {
   InvoiceStatus,
 } from '../../core/entities/Order';
 
-let orderCounter = 1;
-let invoiceCounter = 1;
-
 export class OrderRepository implements IOrderRepository {
   constructor(private prisma: PrismaClient) {}
 
@@ -66,7 +63,8 @@ export class OrderRepository implements IOrderRepository {
 
   async createOrder(data: CreateOrderDto): Promise<OrderEntity & { items: OrderItemEntity[] }> {
     const count = await this.prisma.order.count();
-    const orderNumber = `ORD-${String(count + orderCounter++).padStart(6, '0')}`;
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const orderNumber = `ORD-${String(count + 1).padStart(5, '0')}-${timestamp}`;
     const totalAmount = data.items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
 
     const order = await this.prisma.order.create({
@@ -150,7 +148,8 @@ export class OrderRepository implements IOrderRepository {
     const order = await this.prisma.order.findUnique({ where: { id: orderId } });
     if (!order) throw new Error('Order not found');
     const count = await this.prisma.invoice.count();
-    const invoiceNumber = `INV-${String(count + invoiceCounter++).padStart(6, '0')}`;
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const invoiceNumber = `INV-${String(count + 1).padStart(5, '0')}-${timestamp}`;
     const inv = await this.prisma.invoice.create({
       data: {
         invoiceNumber,
